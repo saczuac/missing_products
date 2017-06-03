@@ -1,0 +1,11 @@
+*.py[co]
+__pycache__
+missing_products/settings_env.py
+.vscode
+bin/
+include/
+lib/
+pip-selfcheck.json
+**/migrations/
+*.sqlite3
+media/
