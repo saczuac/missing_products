@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from .models import Product
+from .models import Product, MissingProduct
 
 from utils.serializers.serializers import JSONResponseMixin
 
 from forms import ProductCreateForm, ProductUpdateForm
+from forms import MissingProductCreateForm, MissingProductUpdateForm
+
 
 from utils.views.templates import CreateTemplateView
 from utils.views.templates import UpdateTemplateView
@@ -60,6 +62,68 @@ class ProductListView(JSONResponseMixin):
 
 class ProductGetView(JSONResponseMixin):
     model = Product
+    message_error = 'Can not find product in db'
+
+    def get_query(self, request=None, *args, **kwargs):
+        return self.model.objects.filter(pk=kwargs['pk'])
+
+
+class MissingProductsFromView(JSONResponseMixin):
+    model = MissingProduct
+    message_error = 'Can not find user in db'
+
+    def get_query(self, request=None, *args, **kwargs):
+        return self.model.objects.filter(user__pk=kwargs['userpk'])
+
+
+class MissingProductsCreateView(CreateTemplateView):
+
+    def __init__(self):
+        self.with_request = False
+        model = MissingProduct
+        template_name = ""
+        form_class = MissingProductCreateForm
+        ctx = {}
+        super(self.__class__, self).__init__(
+            model, template_name, form_class, ctx)
+
+
+class MissingProductsUpdateView(UpdateTemplateView):
+
+    def __init__(self):
+        self.with_request = False
+        model = MissingProduct
+        template_name = ""
+        form_class = MissingProductUpdateForm
+        message_not_exists = "The Missingproducts does not exist"
+        element_name = "missing_product"
+        super(self.__class__, self).__init__(
+            model,
+            template_name,
+            form_class,
+            message_not_exists,
+            element_name
+        )
+
+
+class MissingProductsDeleteView(DeleteTemplateView):
+
+    def __init__(self):
+        model = MissingProduct
+        message_not_exists = "The Missingproducts does not exist"
+        super(self.__class__, self).__init__(
+            model,
+            message_not_exists,
+        )
+
+
+class MissingProductsListView(JSONResponseMixin):
+    model = MissingProduct
+    message_error = 'No Missingproductss in db'
+
+
+class MissingProductsGetView(JSONResponseMixin):
+    model = MissingProduct
     message_error = 'Can not find product in db'
 
     def get_query(self, request=None, *args, **kwargs):

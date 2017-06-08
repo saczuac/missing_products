@@ -25,4 +25,26 @@ urlpatterns = [
         views.ProductGetView.as_view(),
         name='get-product'),
     # <-- products views URLs ends -->
+
+    # <-- Missing Products views URLs starts -->
+    url(r'^missing-products/from/(?P<userpk>\d+)/$',
+        views.MissingProductsFromView.as_view(),
+        name='get-missing-products-from'),
+
+    url(r'missing-products/create/$',
+        views.MissingProductsCreateView.as_view(),
+        name='missing-products-create'),
+
+    url(r'missing-products/update/(?P<pk>[0-9]+)/$',
+        views.MissingProductsUpdateView.as_view(),
+        name='missing-products-update'),
+
+    url(r'missing-products/delete/(?P<pk>[0-9]+)/$',
+        views.MissingProductsDeleteView.as_view(),
+        name='missing-products-delete'),
+
+    url(r'^missing-products/(?P<pk>\d+)/$',
+        views.MissingProductsGetView.as_view(),
+        name='get-missing-products'),
+    # <-- Missing Products URLs ends -->
 ]
