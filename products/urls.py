@@ -1,4 +1,7 @@
 from django.conf.urls import url
+
+from django.contrib.auth import views as auth_views
+
 from . import views
 
 app_name = 'product'
@@ -47,4 +50,21 @@ urlpatterns = [
         views.MissingProductsGetView.as_view(),
         name='get-missing-products'),
     # <-- Missing Products URLs ends -->
+
+    # <-- User views URLs starts -->
+    url(r'^user/login/$', auth_views.LoginView.as_view()),
+
+    url(r'user/create/$',
+        views.UserCreateView.as_view(),
+        name='user-create'),
+
+    url(r'user/update/$',
+        views.UserUpdateView.as_view(),
+        name='user-update'),
+
+    url(r'user/delete/$',
+        views.UserDeleteView.as_view(),
+        name='user-delete'),
+
+    # <-- User views URLs ends -->
 ]

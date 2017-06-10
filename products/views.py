@@ -7,11 +7,13 @@ from utils.serializers.serializers import JSONResponseMixin
 
 from forms import ProductCreateForm, ProductUpdateForm
 from forms import MissingProductCreateForm, MissingProductUpdateForm
-
+from forms import UserUpdateForm, UserCreateForm
 
 from utils.views.templates import CreateTemplateView
 from utils.views.templates import UpdateTemplateView
 from utils.views.templates import DeleteTemplateView
+
+from django.contrib.auth.models import User
 
 
 class ProductCreateView(CreateTemplateView):
@@ -128,3 +130,41 @@ class MissingProductsGetView(JSONResponseMixin):
 
     def get_query(self, request=None, *args, **kwargs):
         return self.model.objects.filter(pk=kwargs['pk'])
+
+
+class UserCreateView(CreateTemplateView):
+
+    def __init__(self):
+        self.with_request = False
+        model = User
+        template_name = ""
+        form_class = UserCreateForm
+        ctx = {}
+        super(self.__class__, self).__init__(
+            model, template_name, form_class, ctx)
+
+
+class UserUpdateView(JSONResponseMixin):
+    model = User
+    message_error = 'You are not logued in'
+
+    def get_post(self, request, post):
+        if request.user.is_authenticated():
+            u = User.objects.get(username=request.user)
+            form = UserUpdateForm(post, u.id)
+
+            if form.is_valid():
+                user = form.update()
+                return user
+            return form.error
+
+
+class UserDeleteView(JSONResponseMixin):
+    model = User
+    message_error = 'You are not logued in'
+
+    def get_post(self, request, post):
+        if request.user.is_authenticated():
+            u = User.objects.get(username=request.user)
+            u.delete()
+            return True
